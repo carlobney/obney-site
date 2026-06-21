@@ -55,8 +55,9 @@ function drawGrid(width, height) {
 function drawNode(node, width, height, t) {
   const x = node.x * width;
   const y = node.y * height;
+  const compact = width < 520;
   const pulse = Math.sin(t / 520 + x * 0.01) * 0.5 + 0.5;
-  const radius = 33 + pulse * 4;
+  const radius = (compact ? 24 : 33) + pulse * (compact ? 2.5 : 4);
 
   ctx.save();
   ctx.strokeStyle = node.color;
@@ -71,7 +72,7 @@ function drawNode(node, width, height, t) {
 
   ctx.shadowBlur = 0;
   ctx.fillStyle = node.color;
-  ctx.font = "600 11px 'IBM Plex Mono', monospace";
+  ctx.font = `600 ${compact ? 9 : 11}px 'IBM Plex Mono', monospace`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillText(node.label, x, y);
@@ -107,18 +108,19 @@ function drawLink(a, b, width, height, t, index) {
 }
 
 function drawTelemetry(width, height, t) {
+  const compact = width < 520;
   ctx.save();
   ctx.fillStyle = "rgba(238, 242, 231, 0.62)";
-  ctx.font = "500 11px 'IBM Plex Mono', monospace";
-  ctx.fillText("TRACE / BUILD-LINE / " + String(Math.floor(t / 17) % 9999).padStart(4, "0"), 28, 34);
+  ctx.font = `500 ${compact ? 9 : 11}px 'IBM Plex Mono', monospace`;
+  ctx.fillText((compact ? "TRACE / " : "TRACE / BUILD-LINE / ") + String(Math.floor(t / 17) % 9999).padStart(4, "0"), compact ? 16 : 28, compact ? 24 : 34);
 
   const bars = [0.82, 0.58, 0.74, 0.42, 0.91, 0.66, 0.52];
   bars.forEach((bar, index) => {
-    const x = 28 + index * 24;
-    const y = height - 118;
-    const h = 54 * (0.55 + Math.sin(t / 700 + index) * 0.08 + bar * 0.35);
+    const x = (compact ? 16 : 28) + index * (compact ? 16 : 24);
+    const y = height - (compact ? 150 : 118);
+    const h = (compact ? 38 : 54) * (0.55 + Math.sin(t / 700 + index) * 0.08 + bar * 0.35);
     ctx.fillStyle = index % 3 === 0 ? "rgba(183, 255, 104, 0.78)" : "rgba(238, 242, 231, 0.34)";
-    ctx.fillRect(x, y - h, 10, h);
+    ctx.fillRect(x, y - h, compact ? 7 : 10, h);
   });
   ctx.restore();
 }
