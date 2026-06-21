@@ -1,4 +1,5 @@
 const canvas = document.querySelector("#factory-canvas");
+if (canvas) {
 const ctx = canvas.getContext("2d");
 
 const nodes = [
@@ -140,3 +141,4 @@ function render(t = 0) {
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 requestAnimationFrame(render);
+}
